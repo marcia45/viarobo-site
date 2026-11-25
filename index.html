@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>via robo — 작은 학원을 위한 앱 개발·운영</title>
+<meta name="description" content="via robo는 소규모 학원과 소상공인을 위한 앱을 기획·개발하고, 구글 플레이 출시와 운영까지 맡습니다.">
+<meta property="og:title" content="via robo — 작은 학원을 위한 앱 개발·운영">
+<meta property="og:description" content="출결·수업 기록·숙제·보강 알림을 앱 하나로. 기획부터 출시, 운영까지 맡습니다.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F5F2EC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316181D'/%3E%3Ccircle cx='9' cy='22' r='3.2' fill='%23FF6A3D'/%3E%3Ccircle cx='23' cy='10' r='3.2' fill='%23F5F2EC'/%3E%3Cpath d='M9 22 C 9 14, 23 18, 23 10' stroke='%23F5F2EC' stroke-width='2' fill='none' stroke-dasharray='2 2.6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #F5F2EC;
+    --paper: #FFFFFF;
+    --ink: #16181D;
+    --ink-2: #4A4D55;
+    --muted: #63666E;
+    --line: #E3DED4;
+    --accent: #FF6A3D;
+    --accent-ink: #B8401A;
+    --soft: #FFE7DC;
+    --mint: #DDEFE6;
+    --mint-ink: #2E6B4E;
+    --lilac: #E7E3F6;
+    --lilac-ink: #4E43A0;
+    --radius: 22px;
+    --max: 1120px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121317; --paper: #1B1D22; --ink: #F2EFE9; --ink-2: #C4C1BA; --muted: #8E8B85;
+      --line: #2C2F36; --accent: #FF7A52; --accent-ink: #FFB49A; --soft: #3A2219;
+      --mint: #18302A; --mint-ink: #8FD3B2; --lilac: #25223A; --lilac-ink: #B9B0F0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121317; --paper: #1B1D22; --ink: #F2EFE9; --ink-2: #C4C1BA; --muted: #8E8B85;
+    --line: #2C2F36; --accent: #FF7A52; --accent-ink: #FFB49A; --soft: #3A2219;
+    --mint: #18302A; --mint-ink: #8FD3B2; --lilac: #25223A; --lilac-ink: #B9B0F0;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-size: 17px; line-height: 1.65; word-break: keep-all; -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  .en { font-family: "Space Grotesk", Pretendard, sans-serif; letter-spacing: -0.01em; }
+
+  /* nav */
+  header.nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
+  header.nav.scrolled { border-bottom-color: var(--line); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 22px; }
+  .logo svg { width: 30px; height: 30px; }
+  .nav-links { display: flex; gap: 28px; font-size: 15px; color: var(--ink-2); }
+  .nav-links a { text-decoration: none; }
+  .nav-links a:hover { color: var(--ink); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 22px; border-radius: 999px; font-weight: 600; font-size: 16px; text-decoration: none; border: 0; cursor: pointer; transition: transform .15s ease, background .15s ease; }
+  .btn:active { transform: scale(.97); }
+  .btn-dark { background: var(--ink); color: var(--bg); }
+  .btn-dark:hover { background: color-mix(in srgb, var(--ink) 85%, var(--accent)); }
+  .btn-line { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+  .btn-line:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .nav .btn { height: 40px; padding: 0 18px; font-size: 14px; }
+
+  /* hero */
+  .hero { padding: 72px 0 96px; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--accent-ink); background: var(--soft); padding: 6px 14px; border-radius: 999px; }
+  .eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  h1 { font-size: clamp(38px, 5.6vw, 64px); line-height: 1.18; letter-spacing: -0.035em; margin: 22px 0 22px; font-weight: 800; }
+  h1 .hl { position: relative; white-space: nowrap; }
+  h1 .hl::after { content: ""; position: absolute; left: -2px; right: -2px; bottom: .08em; height: .26em; background: var(--accent); opacity: .28; border-radius: 4px; z-index: -1; }
+  .lead { font-size: 19px; color: var(--ink-2); max-width: 30em; margin: 0 0 34px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-note { margin-top: 26px; font-size: 14px; color: var(--muted); display: flex; gap: 18px; flex-wrap: wrap; }
+  .hero-note span::before { content: "✓ "; color: var(--mint-ink); font-weight: 700; }
+
+  /* phone */
+  .stage { position: relative; display: flex; justify-content: center; }
+  .route { position: absolute; inset: -30px -10px; width: calc(100% + 20px); height: calc(100% + 60px); pointer-events: none; }
+  .phone { position: relative; width: 300px; background: var(--ink); border-radius: 44px; padding: 12px; box-shadow: 0 40px 80px -30px rgba(22,24,29,.45); transform: rotate(-2.5deg); animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(26px) rotate(-2.5deg); } to { opacity: 1; transform: translateY(0) rotate(-2.5deg); } }
+  .screen { background: #FBF8F3; color: #16181D; border-radius: 34px; overflow: hidden; padding: 22px 16px 18px; min-height: 560px; }
+  .notch { width: 92px; height: 22px; background: var(--ink); border-radius: 0 0 14px 14px; margin: -22px auto 14px; }
+  .s-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .s-top b { font-size: 19px; letter-spacing: -0.02em; }
+  .s-top small { color: #6F6A65; font-size: 12px; }
+  .card { background: #fff; border-radius: 18px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 0 #EEE8DE; }
+  .card .k { font-size: 12px; color: #6F6A65; margin-bottom: 4px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .chip { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .chip.g { background: #DDEFE6; color: #2E6B4E; }
+  .chip.o { background: #FFE7DC; color: #B8401A; }
+  .chip.l { background: #E7E3F6; color: #4E43A0; }
+  .card p { margin: 0; font-size: 14px; line-height: 1.5; }
+  .bar { height: 7px; border-radius: 99px; background: #F0EBE2; margin-top: 10px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 72%; background: #FF6A3D; border-radius: 99px; }
+  .mini { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mini .card { margin: 0; }
+  .mini .big { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .tabbar { display: flex; justify-content: space-around; margin-top: 14px; padding-top: 12px; border-top: 1px solid #EEE8DE; font-size: 11px; color: #6F6A65; }
+  .tabbar span.on { color: #16181D; font-weight: 700; }
+  .toast { position: absolute; left: -18px; bottom: 96px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; font-size: 13px; box-shadow: 0 18px 40px -22px rgba(0,0,0,.35); width: 196px; transform: rotate(2deg); animation: pop .6s .7s cubic-bezier(.2,.8,.2,1) both; }
+  .toast b { display: block; font-size: 13px; margin-bottom: 2px; }
+  @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.96) rotate(2deg); } to { opacity: 1; transform: none rotate(2deg); } }
+
+  /* sections */
+  section { padding: 96px 0; }
+  .sec-head { max-width: 640px; margin-bottom: 48px; }
+  .kicker { font-size: 14px; font-weight: 700; color: var(--accent-ink); letter-spacing: .06em; text-transform: uppercase; }
+  h2 { font-size: clamp(30px, 3.8vw, 42px); line-height: 1.25; letter-spacing: -0.03em; margin: 10px 0 14px; font-weight: 800; }
+  .sec-head p { color: var(--ink-2); margin: 0; font-size: 18px; }
+
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .svc { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 28px 32px; }
+  .svc .ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 22px; }
+  .svc h3 { margin: 0 0 10px; font-size: 21px; letter-spacing: -0.02em; }
+  .svc p { margin: 0; color: var(--ink-2); font-size: 16px; }
+  .svc ul { margin: 18px 0 0; padding: 0; list-style: none; font-size: 15px; color: var(--ink-2); }
+  .svc li { padding: 7px 0; border-top: 1px dashed var(--line); }
+
+  .features { background: var(--ink); color: var(--bg); border-radius: 36px; padding: 72px 56px; }
+  .features .kicker { color: var(--accent); }
+  .features .sec-head p { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); }
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: color-mix(in srgb, var(--bg) 16%, var(--ink)); border-radius: 20px; overflow: hidden; }
+  .feat { background: var(--ink); padding: 28px 26px 30px; }
+  .feat .n { font-size: 14px; color: var(--accent); font-weight: 700; }
+  .feat h4 { margin: 8px 0 8px; font-size: 19px; letter-spacing: -0.02em; }
+  .feat p { margin: 0; font-size: 15px; color: color-mix(in srgb, var(--bg) 68%, var(--ink)); }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: s; position: relative; }
+  .step { position: relative; padding-top: 58px; }
+  .step::before { counter-increment: s; content: "0" counter(s); position: absolute; top: 0; left: 0; font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 15px; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); border: 1.5px solid var(--ink); }
+  .step:not(:last-child)::after { content: ""; position: absolute; top: 21px; left: 52px; right: -8px; border-top: 2px dashed var(--line); }
+  .step h4 { margin: 0 0 8px; font-size: 20px; letter-spacing: -0.02em; }
+  .step p { margin: 0; color: var(--ink-2); font-size: 15px; }
+
+  .contact { background: var(--soft); border-radius: 36px; padding: 64px 56px; display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: center; }
+  .contact h2 { margin-top: 0; }
+  .contact p { color: var(--ink-2); margin: 0; }
+  .contact .box { background: var(--paper); border-radius: 22px; padding: 26px; border: 1px solid var(--line); }
+  .contact .box .k { font-size: 13px; color: var(--muted); }
+  .contact .box .v { font-size: 18px; font-weight: 700; margin: 2px 0 16px; word-break: break-all; }
+  .contact .box .btn { width: 100%; justify-content: center; }
+
+  footer { padding: 56px 0 64px; color: var(--muted); font-size: 14px; }
+  .foot { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 32px; }
+  .foot dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 14px 0 0; }
+  .foot dt { color: var(--muted); }
+  .foot dd { margin: 0; color: var(--ink-2); }
+  .foot .links { display: flex; gap: 20px; }
+  .foot .links a { text-decoration: none; }
+  .foot .links a:hover { color: var(--ink); }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .phone, .toast { animation: none; }
+  }
+
+  @media (max-width: 920px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 64px; }
+    .services, .feat-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; row-gap: 36px; }
+    .step:nth-child(2)::after { display: none; }
+    .contact { grid-template-columns: 1fr; padding: 44px 28px; }
+    .features { padding: 52px 24px; border-radius: 28px; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 16px; }
+    .hero { padding: 40px 0 72px; }
+    section { padding: 72px 0; }
+    .steps { grid-template-columns: 1fr; }
+    .step::after { display: none; }
+    .phone { width: 268px; }
+    .screen { min-height: 500px; }
+    .toast { left: -6px; width: 172px; }
+    .lead { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo en" href="#top" aria-label="via robo 처음으로">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><circle cx="9" cy="22" r="3.4" fill="#FF6A3D"/><circle cx="23" cy="10" r="3.4" fill="var(--bg)"/><path d="M9 22 C 9 14, 23 18, 23 10" stroke="var(--bg)" stroke-width="2" fill="none" stroke-dasharray="2 2.6" stroke-linecap="round"/></svg>
+      via robo
+    </a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="#services">하는 일</a>
+      <a href="#features">학원 앱</a>
+      <a href="#process">진행 방식</a>
+    </nav>
+    <a class="btn btn-dark" href="#contact">문의하기</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow"><i></i>소규모 학원 · 소상공인 앱 개발</span>
+        <h1>작은 학원의 하루를<br><span class="hl">앱 하나로</span> 정리합니다</h1>
+        <p class="lead">via robo는 학원과 작은 가게에 꼭 맞는 앱을 기획하고 만듭니다. 구글 플레이 출시, 서버, 문자 인증, 개인정보 관리까지 출시 뒤 운영도 맡습니다.</p>
+        <div class="cta-row">
+          <a class="btn btn-dark" href="#contact">상담 요청하기 →</a>
+          <a class="btn btn-line" href="#features">학원 앱 살펴보기</a>
+        </div>
+        <div class="hero-note"><span>원장님·선생님·학부모 앱 분리</span><span>휴대폰 번호 인증 로그인</span><span>운영 중인 학원 앱 보유</span></div>
+      </div>
+
+      <div class="stage" aria-hidden="true">
+        <svg class="route" viewBox="0 0 400 640" preserveAspectRatio="none"><path d="M20 600 C 60 420, 0 300, 120 220 S 360 140, 380 30" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round" opacity=".55"/><circle cx="20" cy="600" r="6" fill="var(--accent)"/><circle cx="380" cy="30" r="6" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>
+        <div class="phone">
+          <div class="screen">
+            <div class="notch"></div>
+            <div class="s-top"><b>오늘 수업</b><small>금요일 · 4:20</small></div>
+            <div class="card">
+              <div class="row"><span class="k">초등 3반 · 원어민 리딩</span><span class="chip g">출석 완료</span></div>
+              <p><b>지민</b> 학생이 3:52에 등원했어요.</p>
+            </div>
+            <div class="card">
+              <div class="k">오늘 배운 내용</div>
+              <p>Unit 5 동물 이야기 읽기, 과거형 문장 만들기</p>
+              <div class="row" style="margin-top:10px"><span class="chip o">수업 태도 · 아주 좋아요</span></div>
+            </div>
+            <div class="card">
+              <div class="row"><span class="k">숙제</span><span class="chip l">2개</span></div>
+              <p>단어 외우기 · Unit 5 단어 20개<br>책 읽기 · Reading Tree p.12–18</p>
+              <div class="bar"><i></i></div>
+            </div>
+            <div class="mini">
+              <div class="card"><div class="k">이번 달 출석</div><div class="big en">11/12</div></div>
+              <div class="card"><div class="k">보강 예정</div><div class="big en">12.02</div></div>
+            </div>
+            <div class="tabbar"><span class="on">홈</span><span>수업</span><span>숙제</span><span>보강</span><span>내 정보</span></div>
+          </div>
+        </div>
+        <div class="toast"><b>하원 알림</b>지민 학생이 5:30에 하원했어요.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">What we do</div>
+        <h2>만들고, 올리고, 계속 돌봅니다</h2>
+        <p>앱을 만드는 데서 끝나지 않습니다. 스토어 등록과 서버 운영, 문의 대응까지 한곳에서 맡아 원장님은 수업에만 집중하실 수 있습니다.</p>
+      </div>
+      <div class="services">
+        <article class="svc reveal">
+          <div class="ic" style="background:var(--soft)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V8l8-4 8 4v11"/><path d="M9 19v-6h6v6"/></svg></div>
+          <h3>학원 관리 앱</h3>
+          <p>출결, 수업 기록, 숙제, 보강 일정을 학부모님께 바로 전하는 학원 전용 앱입니다.</p>
+          <ul><li>원장님 · 선생님 · 학부모 화면 분리</li><li>학원 이름과 색으로 맞춤 제작</li><li>초대 코드 + 휴대폰 인증 가입</li></ul>
+        </article>
+        <article class="svc reveal">
+          <div class="ic" style="background:var(--mint)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10 18h4"/></svg></div>
+          <h3>맞춤 앱 개발</h3>
+          <p>예약, 회원 관리, 공지처럼 작은 가게에 필요한 기능만 골라 가볍게 만듭니다.</p>
+          <ul><li>안드로이드 · iOS · 웹 동시 개발</li><li>화면 설계부터 함께 확인</li><li>필요한 기능부터 단계적으로</li></ul>
+        </article>
+        <article class="svc reveal">
+          <div class="ic" style="background:var(--lilac)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--lilac-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3>출시 · 운영 대행</h3>
+          <p>구글 플레이 등록과 정책 대응, 서버와 문자 인증, 개인정보 처리 업무를 맡습니다.</p>
+          <ul><li>스토어 등록 · 데이터 보안 양식 작성</li><li>개인정보 처리방침 · 탈퇴 기능 기본 탑재</li><li>업데이트 · 장애 대응</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" style="padding-top:24px">
+    <div class="wrap">
+      <div class="features reveal">
+        <div class="sec-head">
+          <div class="kicker">Academy app</div>
+          <h2>학원 앱에 들어가는 기능</h2>
+          <p>실제 영어학원에서 원장님 의견을 받아 다듬은 기능들입니다.</p>
+        </div>
+        <div class="feat-grid">
+          <div class="feat"><div class="n en">01</div><h4>출결 · 하원 알림</h4><p>등원과 하원을 기록하면 학부모님 앱에 바로 표시됩니다.</p></div>
+          <div class="feat"><div class="n en">02</div><h4>오늘 배운 내용</h4><p>반 공통 수업 내용과 아이별 수업 태도·한마디를 함께 보냅니다.</p></div>
+          <div class="feat"><div class="n en">03</div><h4>숙제 입력</h4><p>단어 개수, 책 쪽수, 워크시트 장수를 버튼으로 빠르게 입력합니다.</p></div>
+          <div class="feat"><div class="n en">04</div><h4>보강 일정</h4><p>결석한 수업의 보강 날짜를 정하고 학부모님께 안내합니다.</p></div>
+          <div class="feat"><div class="n en">05</div><h4>선생님 계정</h4><p>원장님이 선생님을 추가하고, 볼 수 있는 정보를 나눠 관리합니다.</p></div>
+          <div class="feat"><div class="n en">06</div><h4>개인정보 보호</h4><p>가입 동의, 회원 탈퇴, 권한별 접근 제한을 처음부터 갖췄습니다.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="kicker">Process</div>
+        <h2>이렇게 진행합니다</h2>
+        <p>원장님이 결정하실 것만 여쭙고, 나머지는 저희가 준비합니다.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><h4>상담</h4><p>학원 규모와 지금 쓰는 방식, 꼭 필요한 기능을 듣습니다.</p></div>
+        <div class="step reveal"><h4>화면 설계</h4><p>실제 화면 시안으로 먼저 보여 드리고 함께 고칩니다.</p></div>
+        <div class="step reveal"><h4>개발 · 테스트</h4><p>원장님 휴대폰에 시험판을 설치해 실제로 써 보십니다.</p></div>
+        <div class="step reveal"><h4>출시 · 운영</h4><p>스토어에 올리고, 이후 업데이트와 문의를 계속 맡습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" style="padding-top:24px">
+    <div class="wrap">
+      <div class="contact reveal">
+        <div>
+          <div class="kicker">Contact</div>
+          <h2>우리 학원에도 앱이 필요하다면</h2>
+          <p>학원 이름과 원생 수, 원하시는 기능을 간단히 적어 보내 주세요. 확인 후 연락드리겠습니다.</p>
+        </div>
+        <div class="box" id="contact-box">
+          <div class="k">문의</div>
+          <div class="v" id="contact-email">준비 중입니다</div>
+          <a class="btn btn-dark" id="contact-btn" href="#contact" hidden>메일 보내기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="logo en" style="font-size:18px">via robo</div>
+      <dl id="biz"></dl>
+    </div>
+    <div>
+      <div class="links" id="foot-links"></div>
+      <p style="margin:14px 0 0">© <span id="yr">2026</span> via robo. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* 사업자 정보 — 값을 채우면 화면에 표시됩니다. 비어 있는 항목은 숨겨집니다. */
+  const SITE = {
+    company: 'via robo',
+    owner: '',          // 대표자
+    bizNo: '',          // 사업자등록번호 (예: 123-45-67890)
+    address: '',        // 사업장 주소
+    phone: '',          // 대표 전화
+    email: '',          // 문의 이메일
+    privacyUrl: '',     // 개인정보 처리방침 링크
+  };
+
+  const biz = document.getElementById('biz');
+  [['상호', SITE.company], ['대표', SITE.owner], ['사업자등록번호', SITE.bizNo], ['주소', SITE.address], ['전화', SITE.phone], ['이메일', SITE.email]]
+    .filter(([, v]) => v)
+    .forEach(([k, v]) => { biz.insertAdjacentHTML('beforeend', `<dt>${k}</dt><dd>${v}</dd>`); });
+
+  if (SITE.email) {
+    document.getElementById('contact-email').textContent = SITE.email;
+    const b = document.getElementById('contact-btn');
+    b.href = 'mailto:' + SITE.email + '?subject=' + encodeURIComponent('[via robo] 앱 개발 문의');
+    b.hidden = false;
+  }
+  if (SITE.privacyUrl) {
+    document.getElementById('foot-links').innerHTML = `<a href="${SITE.privacyUrl}">개인정보 처리방침</a>`;
+  }
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
+
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => {
+    es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 }) : null;
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+    io ? io.observe(el) : el.classList.add('in');
+  });
+</script>
+</body>
+</html>
