@@ -1,0 +1,11 @@
+{
+ "page": "index.html",
+ "url": null,
+ "root": null,
+ "kind": "software",
+ "category": "학원 관리 앱과 여행 앱, 소규모 사업장 앱 개발",
+ "primary": "앱 개발 상담 신청",
+ "rounds": 3,
+ "start": "2026-11-25T14:38:10.214Z",
+ "by": "gate.mjs --start"
+}
