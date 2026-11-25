@@ -10,9 +10,6 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#F5F2EC">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316181D'/%3E%3Ccircle cx='9' cy='22' r='3.2' fill='%23FF6A3D'/%3E%3Ccircle cx='23' cy='10' r='3.2' fill='%23F5F2EC'/%3E%3Cpath d='M9 22 C 9 14, 23 18, 23 10' stroke='%23F5F2EC' stroke-width='2' fill='none' stroke-dasharray='2 2.6'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
   :root {
@@ -54,7 +51,7 @@
   }
   a { color: inherit; }
   .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-  .en { font-family: "Space Grotesk", Pretendard, sans-serif; letter-spacing: -0.01em; }
+  .en { letter-spacing: -0.02em; font-feature-settings: "tnum"; }
 
   /* nav */
   header.nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
@@ -76,7 +73,7 @@
   /* hero */
   .hero { padding: 72px 0 96px; }
   .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
-  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--accent-ink); background: var(--soft); padding: 6px 14px; border-radius: 999px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--accent-ink); background: var(--soft); padding: 8px 16px; border-radius: 999px; }
   .eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; }
   h1 { font-size: clamp(38px, 5.6vw, 64px); line-height: 1.18; letter-spacing: -0.035em; margin: 22px 0 22px; font-weight: 800; }
   h1 .hl { position: relative; white-space: nowrap; }
@@ -99,7 +96,7 @@
   .card { background: #fff; border-radius: 18px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 0 #EEE8DE; }
   .card .k { font-size: 12px; color: #6F6A65; margin-bottom: 4px; }
   .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .chip { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .chip { font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px; }
   .chip.g { background: #DDEFE6; color: #2E6B4E; }
   .chip.o { background: #FFE7DC; color: #B8401A; }
   .chip.l { background: #E7E3F6; color: #4E43A0; }
@@ -128,7 +125,7 @@
   .app h3 { margin: 0; font-size: 22px; letter-spacing: -0.02em; }
   .app p { margin: 10px 0 0; color: var(--ink-2); font-size: 16px; }
   .app .row { justify-content: flex-start; gap: 10px; flex-wrap: wrap; }
-  .tag { font-size: 13px; font-weight: 600; padding: 3px 11px; border-radius: 999px; background: var(--lilac); color: var(--lilac-ink); }
+  .tag { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 999px; background: var(--lilac); color: var(--lilac-ink); }
   .tag.on { background: var(--mint); color: var(--mint-ink); }
   .more { display: inline-block; margin-top: 14px; font-size: 15px; font-weight: 600; color: var(--accent-ink); text-decoration: none; }
   .more:hover { text-decoration: underline; }
@@ -136,8 +133,9 @@
 
   .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .svc { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 28px 32px; }
-  .svc .ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 22px; }
-  .svc h3 { margin: 0 0 10px; font-size: 21px; letter-spacing: -0.02em; }
+  .svc-h { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .svc .ic { flex: none; width: 24px; height: 24px; display: grid; place-items: center; }
+  .svc h3 { margin: 0; font-size: 21px; letter-spacing: -0.02em; }
   .svc p { margin: 0; color: var(--ink-2); font-size: 16px; }
   .svc ul { margin: 18px 0 0; padding: 0; list-style: none; font-size: 15px; color: var(--ink-2); }
   .svc li { padding: 7px 0; border-top: 1px dashed var(--line); }
@@ -153,7 +151,7 @@
 
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; counter-reset: s; position: relative; }
   .step { position: relative; padding-top: 58px; }
-  .step::before { counter-increment: s; content: "0" counter(s); position: absolute; top: 0; left: 0; font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 15px; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); border: 1.5px solid var(--ink); }
+  .step::before { counter-increment: s; content: "0" counter(s); position: absolute; top: 0; left: 0; font-weight: 700; font-size: 15px; font-feature-settings: "tnum"; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); border: 1.5px solid var(--ink); }
   .step:not(:last-child)::after { content: ""; position: absolute; top: 21px; left: 52px; right: -8px; border-top: 2px dashed var(--line); }
   .step h4 { margin: 0 0 8px; font-size: 20px; letter-spacing: -0.02em; }
   .step p { margin: 0; color: var(--ink-2); font-size: 15px; }
@@ -302,24 +300,21 @@
       <div class="sec-head reveal">
         <div class="kicker">What we do</div>
         <h2>만들고, 올리고, 계속 돌봅니다</h2>
-        <p>앱을 만드는 데서 끝나지 않습니다. 스토어 등록과 서버 운영, 문의 대응까지 한곳에서 맡아 원장님은 수업에만 집중하실 수 있습니다.</p>
+        <p>앱을 만드는 데서 끝나지 않습니다. 스토어 등록과 서버 운영, 문의 대응까지 한곳에서 맡아 대표님은 본업에만 집중하실 수 있습니다.</p>
       </div>
       <div class="services">
         <article class="svc reveal">
-          <div class="ic" style="background:var(--soft)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V8l8-4 8 4v11"/><path d="M9 19v-6h6v6"/></svg></div>
-          <h3>학원 관리 앱</h3>
+          <div class="svc-h"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V8l8-4 8 4v11"/><path d="M9 19v-6h6v6"/></svg></span><h3>학원 관리 앱</h3></div>
           <p>출결, 수업 기록, 숙제, 보강 일정을 학부모님께 바로 전하는 학원 전용 앱입니다.</p>
           <ul><li>원장님 · 선생님 · 학부모 화면 분리</li><li>학원 이름과 색으로 맞춤 제작</li><li>초대 코드 + 휴대폰 인증 가입</li></ul>
         </article>
         <article class="svc reveal">
-          <div class="ic" style="background:var(--mint)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10 18h4"/></svg></div>
-          <h3>맞춤 앱 개발</h3>
+          <div class="svc-h"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10 18h4"/></svg></span><h3>맞춤 앱 개발</h3></div>
           <p>예약, 회원 관리, 공지처럼 작은 가게에 필요한 기능만 골라 가볍게 만듭니다.</p>
           <ul><li>안드로이드 · iOS · 웹 동시 개발</li><li>화면 설계부터 함께 확인</li><li>필요한 기능부터 단계적으로</li></ul>
         </article>
         <article class="svc reveal">
-          <div class="ic" style="background:var(--lilac)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--lilac-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <h3>출시 · 운영 대행</h3>
+          <div class="svc-h"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--lilac-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>출시 · 운영 대행</h3></div>
           <p>구글 플레이 등록과 정책 대응, 서버와 문자 인증, 개인정보 처리 업무를 맡습니다.</p>
           <ul><li>스토어 등록 · 데이터 보안 양식 작성</li><li>개인정보 처리방침 · 탈퇴 기능 기본 탑재</li><li>업데이트 · 장애 대응</li></ul>
         </article>
@@ -352,7 +347,7 @@
       <div class="sec-head reveal">
         <div class="kicker">Process</div>
         <h2>이렇게 진행합니다</h2>
-        <p>원장님이 결정하실 것만 여쭙고, 나머지는 저희가 준비합니다.</p>
+        <p>꼭 결정하셔야 할 것만 여쭙고, 나머지는 저희가 준비합니다.</p>
       </div>
       <div class="steps">
         <div class="step reveal"><h4>상담</h4><p>학원 규모와 지금 쓰는 방식, 꼭 필요한 기능을 듣습니다.</p></div>
